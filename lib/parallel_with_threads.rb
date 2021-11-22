@@ -1,7 +1,11 @@
 require "factorial"
 
-[56132, 43212, 15934].map do |n|
-  Thread.new do
-    Factorial.compute(n)
+class ParallelWithThreads
+  def self.compute(numbers)
+    numbers.map do |n|
+      Thread.new do
+        Factorial.compute(n)
+      end
+    end.map(&:value).reduce(&:+)
   end
-end.map(&:value).reduce(&:+)
+end

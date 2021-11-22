@@ -1,0 +1,6 @@
+#!/bin/bash
+
+SCRIPT_DIR="$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
+ROOT_DIR="$SCRIPT_DIR/.."
+
+ruby -I $ROOT_DIR/lib -W0 $ROOT_DIR/lib/performance_measure.rb

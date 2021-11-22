@@ -7,14 +7,6 @@ up:
   - bundler
 
 commands:
-  console:
-    desc: 'start a console'
-    run: bin/console
-  run:
-    desc: 'start the application'
-    run: bin/run
-  test:
-    syntax:
-      argument: file
-      optional: args...
-    run: bin/testunit
+  benchmark:
+    desc: 'Measure the performance'
+    run: bin/benchmark
