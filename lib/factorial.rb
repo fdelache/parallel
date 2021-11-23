@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-# Recursive implementation of Factorial computation
+# Non-recursive implementation of Factorial computation
 class Factorial
   def self.compute(n)
     return n if n <= 2
