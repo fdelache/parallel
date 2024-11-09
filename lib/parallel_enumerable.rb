@@ -24,7 +24,7 @@ class ParallelEnumerable
     slice_size = @original_collection.count / ractor_count
 
     ractors = []
-    shareable_block = Ractor.make_shareable(block)
+    shareable_block = Ractor.make_shareable(block.curry)
     @original_collection.each_slice(slice_size) do |sub_elements|
       ractors << Ractor.new(sub_elements, shareable_block) do |elements, block|
         elements.map(&block)
