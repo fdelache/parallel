@@ -2,7 +2,7 @@
 require 'etc'
 
 module Strategies
-  class RactorStrategy
+  class Ractors
     def map(original_collection, &block)
       ractor_count = [processor_count, original_collection.count].min
       slice_size = original_collection.count / ractor_count
@@ -23,6 +23,5 @@ module Strategies
     def processor_count
       Etc.nprocessors
     end
-  
   end
 end

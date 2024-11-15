@@ -1,11 +1,8 @@
 require "factorial"
+require "strategies/threads"
 
 class ParallelWithThreads
   def self.compute(numbers)
-    numbers.map do |n|
-      Thread.new do
-        Factorial.compute(n)
-      end
-    end.map(&:value).reduce(&:+)
+    numbers.parallel(strategy: Strategies::Threads.new).map { |n| Factorial.compute(n) }.reduce(&:+)
   end
 end

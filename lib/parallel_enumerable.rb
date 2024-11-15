@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 require 'forwardable'
-require 'strategies/ractor_strategy'
+require 'strategies/ractors'
 
 module Enumerable
-  def parallel(strategy: Strategies::RactorStrategy.new)
+  def parallel(strategy: Strategies::Ractors.new)
     ParallelEnumerable.new(self, strategy:)
   end
 end
@@ -12,7 +12,7 @@ class ParallelEnumerable
   include Enumerable
 
   # @param original_collection: The Enumerable to parallelize.
-  def initialize(original_collection, strategy: Strategies::RactorStrategy.new)
+  def initialize(original_collection, strategy: Strategies::Ractors.new)
     @original_collection = original_collection
     @strategy = strategy
   end
