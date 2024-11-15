@@ -1,10 +1,10 @@
 # frozen_string_literal: true
 require 'forwardable'
-require 'etc'
+require 'strategies/ractor_strategy'
 
 module Enumerable
-  def parallel
-    ParallelEnumerable.new(self)
+  def parallel(strategy: Strategies::RactorStrategy.new)
+    ParallelEnumerable.new(self, strategy:)
   end
 end
 
@@ -12,8 +12,9 @@ class ParallelEnumerable
   include Enumerable
 
   # @param original_collection: The Enumerable to parallelize.
-  def initialize(original_collection)
+  def initialize(original_collection, strategy: Strategies::RactorStrategy.new)
     @original_collection = original_collection
+    @strategy = strategy
   end
 
   def each(&block)
@@ -21,26 +22,10 @@ class ParallelEnumerable
   end
 
   def map(&block)
-    slice_size = @original_collection.count / ractor_count
-
-    ractors = []
-    shareable_block = Ractor.make_shareable(block.curry)
-    @original_collection.each_slice(slice_size) do |sub_elements|
-      ractors << Ractor.new(sub_elements, shareable_block) do |elements, block|
-        elements.map(&block)
-      end
-    end
-
-    ParallelEnumerable.new(ractors.flat_map(&:take))
+    ParallelEnumerable.new(strategy.map(original_collection, &block), strategy:)
   end
 
   private
 
-  def ractor_count
-    [processor_count, @original_collection.count].min
-  end
-
-  def processor_count
-    Etc.nprocessors
-  end
+  attr_reader :strategy, :original_collection
 end
