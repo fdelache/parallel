@@ -16,6 +16,10 @@ class ParallelEnumerable
     @original_collection = original_collection
   end
 
+  def unparallel
+    @original_collection
+  end
+
   def each(&block)
     @original_collection.each(&block)
   end

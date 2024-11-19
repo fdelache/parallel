@@ -15,4 +15,10 @@ class ParallelEnumerableTest < Minitest::Test
     expected_result = original_collection.reduce(&:+)
     assert_equal expected_result, ParallelEnumerable.new(original_collection).reduce(&:+)
   end
+
+  def test_unparallel
+    original_collection = 1.step.take(10)
+
+    assert_equal original_collection, ParallelEnumerable.new(original_collection).unparallel
+  end
 end
