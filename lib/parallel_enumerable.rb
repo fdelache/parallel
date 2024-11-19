@@ -25,11 +25,9 @@ class ParallelEnumerable
   end
 
   def map(&block)
-    slice_size = @original_collection.count / ractor_count
-
     ractors = []
     shareable_block = Ractor.make_shareable(block.curry)
-    @original_collection.each_slice(slice_size) do |sub_elements|
+    slices.each do |sub_elements|
       ractors << Ractor.new(sub_elements, shareable_block) do |elements, block|
         elements.map(&block)
       end
@@ -46,5 +44,14 @@ class ParallelEnumerable
 
   def processor_count
     Etc.nprocessors
+  end
+
+  def slices
+    unless defined?(@slices)
+      slice_size = @original_collection.count / ractor_count
+      @slices = @original_collection.each_slice(slice_size)
+    end
+
+    @slices
   end
 end
